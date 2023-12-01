@@ -3,8 +3,8 @@ use std::collections::HashMap;
 fn part1_approach1(input: &str) -> u32 {
     let mut total = 0;
 
-    for row in  input.split("\n").into_iter() {
-        let mut t : Vec<u32> = vec![];
+    for row in input.split("\n").into_iter() {
+        let mut t: Vec<u32> = vec![];
         for ch in row.chars() {
             if !ch.is_digit(10) {
                 continue;
@@ -17,9 +17,16 @@ fn part1_approach1(input: &str) -> u32 {
 }
 
 fn part1_approach2(input: &str) -> u32 {
-    return input.split("\n").into_iter()
-        .map(|row| row.chars().map(|x| x.to_digit(10).unwrap_or(0) as u32).filter(|x| x != &0).collect::<Vec<_>>())
-        .map(|row| { row.first().unwrap_or(&0) * 10 + row.last().unwrap_or(&0) })
+    return input
+        .split("\n")
+        .into_iter()
+        .map(|row| {
+            row.chars()
+                .map(|x| x.to_digit(10).unwrap_or(0) as u32)
+                .filter(|x| x != &0)
+                .collect::<Vec<_>>()
+        })
+        .map(|row| row.first().unwrap_or(&0) * 10 + row.last().unwrap_or(&0))
         .sum();
 }
 
@@ -46,18 +53,16 @@ fn part2_approach1(input: &str) -> u32 {
 
     let mut total = 0;
 
-    for row in  input.split("\n").into_iter() {
-        let n = row.len();
-        let mut res : Vec<u32> = vec![];
-        for i in 0..n {
+    for row in input.split("\n").into_iter() {
+        let mut res: Vec<u32> = vec![];
+        for i in 0..row.len() {
             for (tok, val) in &tokens {
                 if row[i..].starts_with(tok) {
                     res.push(*val);
                 }
             }
         }
-        total += res.first().unwrap_or(&0) * 10;
-        total += res.last().unwrap_or(&0);
+        total += res.first().unwrap_or(&0) * 10 + res.last().unwrap_or(&0);
     }
     total
 }
@@ -65,7 +70,6 @@ fn part2_approach1(input: &str) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-
 
     #[test]
     fn test_part_1() {
@@ -76,7 +80,6 @@ treb7uchet";
         assert_eq!(part1_approach1(input), 142);
         assert_eq!(part1_approach2(input), 142);
     }
-
 
     #[test]
     fn test_part_2() {
@@ -90,7 +93,6 @@ zoneight234
         assert_eq!(part2_approach1(input), 281);
     }
 }
-
 
 fn main() {
     let input = include_str!("input.txt");
