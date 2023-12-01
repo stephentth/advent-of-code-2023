@@ -18,51 +18,46 @@ fn part1_approach1(input: &str) -> u32 {
 
 fn part1_approach2(input: &str) -> u32 {
     return input
-        .split("\n")
-        .into_iter()
-        .map(|row| {
-            row.chars()
-                .map(|x| x.to_digit(10).unwrap_or(0) as u32)
-                .filter(|x| x != &0)
-                .collect::<Vec<_>>()
+        .lines()
+        .map(|row| row.chars().flat_map(|x| x.to_digit(10)).collect::<Vec<_>>())
+        .filter_map(|row| {
+            let first = row.first()?;
+            let last = row.last()?;
+            Some(first * 10 + last)
         })
-        .map(|row| row.first().unwrap_or(&0) * 10 + row.last().unwrap_or(&0))
         .sum();
 }
 
 fn part2_approach1(input: &str) -> u32 {
-    let mut tokens: HashMap<&str, u32> = HashMap::new();
-    tokens.insert("one", 1);
-    tokens.insert("two", 2);
-    tokens.insert("three", 3);
-    tokens.insert("four", 4);
-    tokens.insert("five", 5);
-    tokens.insert("six", 6);
-    tokens.insert("seven", 7);
-    tokens.insert("eight", 8);
-    tokens.insert("nine", 9);
-    tokens.insert("1", 1);
-    tokens.insert("2", 2);
-    tokens.insert("3", 3);
-    tokens.insert("4", 4);
-    tokens.insert("5", 5);
-    tokens.insert("6", 6);
-    tokens.insert("7", 7);
-    tokens.insert("8", 8);
-    tokens.insert("9", 9);
+    #[rustfmt::skip]
+    let tokens: HashMap<&str, u32> = [
+        ("one", 1), ("two", 2), ("three", 3), ("four", 4), ("five", 5),
+        ("six", 6), ("seven", 7), ("eight", 8), ("nine", 9),
+        ("1", 1), ("2", 2), ("3", 3), ("4", 4), ("5", 5),
+        ("6", 6), ("7", 7), ("8", 8), ("9", 9),
+    ].iter().cloned().collect();
 
     let mut total = 0;
-
     for row in input.split("\n").into_iter() {
-        let mut res: Vec<u32> = vec![];
-        for i in 0..row.len() {
+        let mut first = 0;
+        'outer: for i in 0..row.len() {
             for (tok, val) in &tokens {
                 if row[i..].starts_with(tok) {
-                    res.push(*val);
+                    first = *val;
+                    break 'outer;
                 }
             }
         }
-        total += res.first().unwrap_or(&0) * 10 + res.last().unwrap_or(&0);
+        let mut last = 0;
+        'outer: for i in (0..row.len()).rev() {
+            for (tok, val) in &tokens {
+                if row[i..].starts_with(tok) {
+                    last = *val;
+                    break 'outer;
+                }
+            }
+        }
+        total += first * 10 + last;
     }
     total
 }
@@ -103,4 +98,8 @@ fn main() {
     println!("part 1 = {}", r1_a1);
     println!("part 1 = {}", r1_a2);
     println!("part 2 = {}", r2);
+
+    assert!(r1_a1 == 55712);
+    assert!(r1_a2 == 55712);
+    assert!(r2 == 55413);
 }
