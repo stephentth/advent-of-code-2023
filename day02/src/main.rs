@@ -36,7 +36,6 @@ fn cube_conundrum_part1_approach2(input: &str) -> u32 {
     input
         .lines()
         .map(|row| Game::from_str(row).unwrap())
-        .into_iter()
         .filter(|g| {
             g.cubes
                 .iter()
@@ -107,6 +106,20 @@ fn cube_conundrum_part2_approach1(input: &str) -> u32 {
     total
 }
 
+fn main() {
+    let input = include_str!("input.txt");
+    let p1_a1 = cube_conundrum_part1_approach1(input);
+    let p1_a2 = cube_conundrum_part1_approach2(input);
+    let p2_a1 = cube_conundrum_part2_approach1(input);
+    println!("{}", p1_a1);
+    println!("{}", p1_a2);
+    println!("{}", p2_a1);
+
+    assert_eq!(p1_a1, 2265);
+    assert_eq!(p1_a2, 2265);
+    assert_eq!(p2_a1, 64097);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -131,18 +144,4 @@ Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
         assert_eq!(cube_conundrum_part2_approach1(input), 2286);
     }
-}
-
-fn main() {
-    let input = include_str!("input.txt");
-    let p1_a1 = cube_conundrum_part1_approach1(input);
-    let p1_a2 = cube_conundrum_part1_approach2(input);
-    let p2_a1 = cube_conundrum_part2_approach1(input);
-    println!("{}", p1_a1);
-    println!("{}", p1_a2);
-    println!("{}", p2_a1);
-
-    assert_eq!(p1_a1, 2265);
-    assert_eq!(p1_a2, 2265);
-    assert_eq!(p2_a1, 64097);
 }
