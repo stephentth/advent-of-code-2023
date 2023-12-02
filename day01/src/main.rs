@@ -3,10 +3,10 @@ use std::collections::HashMap;
 fn part1_approach1(input: &str) -> u32 {
     let mut total = 0;
 
-    for row in input.split("\n").into_iter() {
+    for row in input.lines() {
         let mut t: Vec<u32> = vec![];
         for ch in row.chars() {
-            if !ch.is_digit(10) {
+            if !ch.is_ascii_digit() {
                 continue;
             }
             t.push(ch.to_digit(10).unwrap_or(0));
@@ -17,7 +17,7 @@ fn part1_approach1(input: &str) -> u32 {
 }
 
 fn part1_approach2(input: &str) -> u32 {
-    return input
+    input
         .lines()
         .map(|row| row.chars().flat_map(|x| x.to_digit(10)).collect::<Vec<_>>())
         .filter_map(|row| {
@@ -25,7 +25,7 @@ fn part1_approach2(input: &str) -> u32 {
             let last = row.last()?;
             Some(first * 10 + last)
         })
-        .sum();
+        .sum()
 }
 
 fn part2_approach1(input: &str) -> u32 {
@@ -38,7 +38,7 @@ fn part2_approach1(input: &str) -> u32 {
     ].iter().cloned().collect();
 
     let mut total = 0;
-    for row in input.split("\n").into_iter() {
+    for row in input.lines() {
         let mut first = 0;
         'outer: for i in 0..row.len() {
             for (tok, val) in &tokens {
@@ -60,6 +60,21 @@ fn part2_approach1(input: &str) -> u32 {
         total += first * 10 + last;
     }
     total
+}
+
+fn main() {
+    let input = include_str!("input.txt");
+    let r1_a1 = part1_approach1(input);
+    let r1_a2 = part1_approach2(input);
+    let r2 = part2_approach1(input);
+
+    println!("part 1 = {}", r1_a1);
+    println!("part 1 = {}", r1_a2);
+    println!("part 2 = {}", r2);
+
+    assert!(r1_a1 == 55712);
+    assert!(r1_a2 == 55712);
+    assert!(r2 == 55413);
 }
 
 #[cfg(test)]
@@ -87,19 +102,4 @@ zoneight234
 7pqrstsixteen";
         assert_eq!(part2_approach1(input), 281);
     }
-}
-
-fn main() {
-    let input = include_str!("input.txt");
-    let r1_a1 = part1_approach1(input);
-    let r1_a2 = part1_approach2(input);
-    let r2 = part2_approach1(input);
-
-    println!("part 1 = {}", r1_a1);
-    println!("part 1 = {}", r1_a2);
-    println!("part 2 = {}", r2);
-
-    assert!(r1_a1 == 55712);
-    assert!(r1_a2 == 55712);
-    assert!(r2 == 55413);
 }
